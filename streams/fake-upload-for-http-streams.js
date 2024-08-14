@@ -7,13 +7,13 @@ class OneToHundredStream extends Readable {
     const i = this.index++;
 
     setTimeout(() => {
-      if (i > 100) {
+      if (i > 10) {
         this.push(null);
       } else {
         const buf = Buffer.from(String(i));
         this.push(buf);
       }
-    }, 500);
+    }, 1000);
   }
 }
 
@@ -22,4 +22,8 @@ fetch('http://localhost:3034', {
   body: new OneToHundredStream(),
   duplex: 'half', // Linha adicionada pra que o fetch pudesse funcionar normalmente
 
+}).then(response=>{
+    return response.text()
+}).then(data =>{
+    console.log(data)
 })

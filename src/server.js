@@ -1,8 +1,9 @@
 import  http  from 'node:http';
 import { json } from './middlewares/json.js';
+import { Database } from './database.js';
 
 
-const perfil = []
+const database = new Database()
 
 const server = http.createServer(async(req, res) =>{
     const { method, url } = req
@@ -14,20 +15,25 @@ const server = http.createServer(async(req, res) =>{
     console.log(req.body)
 
 
-
     if(method == 'GET' && url == '/profile'){
-        return res.end(JSON.stringify(perfil))
+
+        const perfis = database.select('perfis')
+
+
+        return res.end(JSON.stringify(perfis))
     }
     else if(method == 'POST' && url == '/profile'){
 
-        const { name, email } = req.body
+        const { id, name, email, bio } = req.body
 
-        perfil.push({
-            id: 7,
+        const profile = {
+            id,
             name,
             email,
-            bio: 'Solus Christus'
-        })
+            bio
+        }
+
+        database.insert('perfis', profile)
 
 
        return res
